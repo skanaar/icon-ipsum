@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Lorem Ipsum, for icons">
+  <title>Icon Ipsum</title>
+  <style>
+    app-root div {
+      display: inline-block;
+      margin: 10px;
+      background: #eee;
+    }
+    svg {
+      display: block;
+      width: 48px;
+      height: 48px;
+    }
+    tool-bar {
+      display: block;
+    }
+    tool-bar button {
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <tool-bar></tool-bar>
+	<app-root>
+  </app-root>
+	
+	<script type="module">
+    
+    import { IconIpsum } from './IconIpsum.js'
+    import { random } from './random.js'
+    import { templates } from './templates.js'
+    
+		const iconIpsum = new IconIpsum({ strokeWidth : 2, width: 64, height: 64 })
+    
+    const faviconer = new IconIpsum({ strokeWidth : 2, stroke: '#000' })
+    faviconer.seed(random(1,100))
+    const appIcon = faviconer.iconDataUri()
+    document.querySelector('head link[rel=icon]').href = appIcon
+    
+    const toolbar = document.querySelector('tool-bar')
+    const root = document.querySelector('app-root')
+
+    for (let item of templates){
+      const btn = document.createElement('button')
+      btn.textContent = item.name
+      btn.onclick = () => render(item.name)
+      toolbar.appendChild(btn)
+    }
+
+    function render(name) {
+      root.textContent = ''
+      for (let i=0; i < 100; i++){
+        const icon = document.createElement('div')
+        icon.innerHTML = iconIpsum.icon(name)
+        root.appendChild(icon)
+      }
+    }
+    
+    render()
+	</script>
+
+</body>
+</html>
