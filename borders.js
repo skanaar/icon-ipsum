@@ -26,6 +26,12 @@ export function borders() {
     [Vec(0.3, m), Vec(0.7, m)],
   ]
 
+  const stripes = (count) =>
+    seq(count).map((i) => {
+      const x = i / count
+      return [Vec(x, 0), Vec(x + mL, -mL)]
+    })
+
   return [
     { name: 'straight', tags: 'L M S taper', lines: [[Vec(0, 0), Vec(1, 0)]] },
     { name: 'straight', tags: 'L M S taper prefer-straight', lines: [[Vec(0, 0), Vec(1, 0)]] },
@@ -37,38 +43,17 @@ export function borders() {
     {
       name: 'striped',
       tags: 'L in',
-      lines: [
-        [Vec(0, 0), Vec(1, 0)],
-        [Vec(0, -mL), Vec(1, -mL)],
-        ...seq(5).map((i) => {
-          const x = i / 5
-          return [Vec(x, 0), Vec(x + mL, -mL)]
-        }),
-      ],
+      lines: [[Vec(0, 0), Vec(1, 0)], [Vec(0, -mL), Vec(1, -mL)], ...stripes(4)],
     },
     {
       name: 'striped',
       tags: 'M in',
-      lines: [
-        [Vec(0, 0), Vec(1, 0)],
-        [Vec(0, -mL), Vec(1, -mL)],
-        ...seq(4).map((i) => {
-          const x = i / 4
-          return [Vec(x, 0), Vec(x + mL, -mL)]
-        }),
-      ],
+      lines: [[Vec(0, 0), Vec(1, 0)], [Vec(0, -mL), Vec(1, -mL)], ...stripes(3)],
     },
     {
       name: 'striped',
       tags: 'S in',
-      lines: [
-        [Vec(0, 0), Vec(1, 0)],
-        [Vec(0, -mL), Vec(1, -mL)],
-        ...seq(3).map((i) => {
-          const x = i / 3
-          return [Vec(x, 0), Vec(x + mL, -mL)]
-        }),
-      ],
+      lines: [[Vec(0, 0), Vec(1, 0)], [Vec(0, -mL), Vec(1, -mL)], ...stripes(2)],
     },
     { name: 'double-L', tags: 'L out', lines: doubleLine(mL) },
     { name: 'double-M', tags: 'M out', lines: doubleLine(mM) },
@@ -118,7 +103,7 @@ export function borders() {
     },
     {
       name: 'semicircle',
-      tags: 'L M S out tall taper',
+      tags: 'L M S out tall taper semicircle',
       lines: [circle([0.5, 0], 0.5, Math.PI)],
     },
     {

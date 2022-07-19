@@ -19,45 +19,79 @@
     }
     tool-bar {
       display: block;
+      font-family: sans-serif;
+    }
+    tool-bar button, tool-bar label {
+      margin: 10px;
+    }
+    tool-bar input {
+      width: 64px;
+      font: inherit;
+      border: 2px solid #888;
+      border-radius: 4px;
     }
     tool-bar button {
-      margin: 10px;
+      appearance: none;
+      border: none;
+      background: #ddd;
+      padding: 5px 10px;
+      font: inherit;
+      border-radius: 4px;
+    }
+    tool-bar button:hover {
+      background: #ccc;
     }
   </style>
 </head>
 <body>
-  <tool-bar></tool-bar>
+  <tool-bar>
+    <label><input id=stroke-width-input type=number value=2 step="0.5"> Thickness</label>
+    <category-buttons></category-buttons>
+  </tool-bar>
 	<app-root>
   </app-root>
 	
-	<script type="module">
+	<script type=module>
     
     import { IconIpsum } from './IconIpsum.js'
     import { random } from './random.js'
     import { templates } from './templates.js'
-    
-		const iconIpsum = new IconIpsum({ strokeWidth : 2, width: 64, height: 64 })
-    
+
     const faviconer = new IconIpsum({ strokeWidth : 2, stroke: '#000' })
     faviconer.seed(random(1,100))
     const appIcon = faviconer.iconDataUri()
     document.querySelector('head link[rel=icon]').href = appIcon
-    
-    const toolbar = document.querySelector('tool-bar')
-    const root = document.querySelector('app-root')
 
-    for (let item of templates){
+    const buttons = document.querySelector('category-buttons')
+    const root = document.querySelector('app-root')
+    const strokeInput = document.querySelector('input#stroke-width-input')
+    
+    let templateFilter = undefined
+    
+    strokeInput.addEventListener('input', render)
+    
+    function addButton(label, template) {
       const btn = document.createElement('button')
-      btn.textContent = item.name
-      btn.onclick = () => render(item.name)
-      toolbar.appendChild(btn)
+      btn.textContent = label
+      btn.onclick = () => {
+        templateFilter = template
+        render()
+      }
+      buttons.appendChild(btn)
     }
 
-    function render(name) {
+    addButton('all', undefined)
+    for (let item of templates){
+      addButton(item.name, item.name)
+    }
+
+    function render() {
+      const strokeWidth = +strokeInput.value
+      const iconIpsum = new IconIpsum({ strokeWidth, width: 64, height: 64 })
       root.textContent = ''
       for (let i=0; i < 100; i++){
         const icon = document.createElement('div')
-        icon.innerHTML = iconIpsum.icon(name)
+        icon.innerHTML = iconIpsum.icon(templateFilter)
         root.appendChild(icon)
       }
     }

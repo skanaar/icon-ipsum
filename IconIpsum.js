@@ -39,9 +39,12 @@ export class IconIpsum {
         i + random(1, this.parts.length)
       )
     )
-    let svgElements = template.edges.flatMap(({ start, end, height }, i) => {
+    let svgElements = template.edges.flatMap((edge, i) => {
       let { name, lines } = bulkheads[i]
-      return lines.map((line) => svgPath(name, stretchBetween(line, start, end, height)))
+      return edge.lines.flatMap(({ start, end }) => {
+        let height = dist(start, end)
+        return lines.map((line) => svgPath(name, stretchBetween(line, start, end, height)))
+      })
     })
     this.offset += svgElements.length
     const svg =
